@@ -7,10 +7,10 @@ import React, { useState } from 'react';
 
 
 function Register (){
-    const [cod,updcod]=useState("");
+    const [cod,updcod]=useState( );
     const updateData=()=>{
         try{
-            updcod =updateData;
+            updcod=updateData;
         }catch (error){
             console.log(error);
         }
@@ -63,6 +63,7 @@ function Register (){
                     <div class="col-md-3" >
                         <label for="est">Estado</label>
                         <select type="text" class="form-control" id="est" placeholder="--Selecione--" disabled>
+                        <option>--Seleccione--</option>
                         </select>
                     </div>
                     <div class="col-md-3">
