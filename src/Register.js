@@ -7,58 +7,63 @@ import React, { useState } from 'react';
 
 
 function Register (){
-    const [cod,updcod]=useState( );
-    const updateData=()=>{
-        try{
-            updcod=updateData;
-        }catch (error){
-            console.log(error);
-        }
-    }
     const getCP = async () =>{
         try {
+            let cod=document.getElementById("cp").value;
+            let esta=document.getElementById("est");
+            let muni=document.getElementById("mun");
+            let col=document.getElementById("col");
+            console.log("dat");
+            if(cod.length===5){
+                let formData = new FormData();
+                formData.append("cp",cod);
+                const url = "http://api.masksoftco.mx/direcciones/codigo-postal";
 
-            let formData = new FormData();
-            formData.append("cp",cod);
-            const url = "http://api.masksoftco.mx/direcciones/codigo-postal";
-
-            let result = await axios({
-                url,
-                method: 'POST',
-                dataType: 'json',
-                ContentType: 'application/json',
-                data: formData
-            });
-            if(result.data){
-                let objectRes = result.data;
-                for(let i=0; i<objectRes.length; i++){
-                    console.log(objectRes[i].colonia);
+                let result = await axios({
+                    url,
+                    method: 'POST',
+                    dataType: 'json',
+                    ContentType: 'application/json',
+                    data: formData
+                });
+                if(result.data){
+                    let objectRes = result.data;
+                    for(let i=0; i<objectRes.length; i++){
+                        console.log(objectRes[i].colonia);
+                    }
+                    toastr.success("Información consultada", "correcto")
+                }else{
+                    swal("Opps!", "Código postal incorrecto", "error");
                 }
-                toastr.success("Información consultada", "correcto")
+                console.log(result)
+                console.log(result.data)
+
+                let codps=result.data;
+                esta.innerHTML="<option>"+ codps[0].estado + "</option>";
+                muni.innerHTML="<option>"+ codps[0].municipio + "</option>";
+
+                for(let i=0;i<codps.length;++i){
+                    col.innerHTML += "<option>" + codps[i].colonia + "</option>"
+                }
+
+                // return (res.data ? res.data : false);
+            
             }else{
-                swal("Opps!", "Código postal incorrecto", "error");
+                esta.innerHTML="<option>----</option>";
+                muni.innerHTML="<option>----</option>";
+                col.innerHTML="<option>----</option>";
             }
-
-
-            console.log(result)
-            console.log(result.data)
-            
-
-
-           // return (res.data ? res.data : false);
-            
-        } catch (error) {
+        }catch (error) {
             console.log(error);
-        }
+        }      
     }
-
     return(
         <div className="content">
             <form>
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="cd">CodigoPostal</label>
-                        <input type="text" class="form-control" id="cd" placeholder="Codigo Postal" onChange={(e)=>updateData(e.target.value)} />
+                        <label for="text">CodigoPostal</label>
+                        <input type="number" class="form-control" id="cp" placeholder="Codigo Postal" onChange={getCP} />
                     </div>
                     <div class="col-md-3" >
                         <label for="est">Estado</label>
@@ -80,7 +85,6 @@ function Register (){
                     </div>
                 </div>
             </form>
-            <button onClick={getCP}>Obtener</button>
         </div>
     );
 
